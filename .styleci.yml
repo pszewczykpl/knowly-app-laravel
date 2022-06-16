@@ -3,5 +3,6 @@ php:
   disabled:
     - no_unused_imports
   finder:
+    name: "*.php"
     not-name:
       - index.php
