@@ -1,8 +1,13 @@
-php:
-  preset: laravel
-  disabled:
-    - no_unused_imports
-  finder:
-    name: "*.php"
-    not-name:
-      - index.php
+risky: false
+preset: laravel
+disabled:
+  - no_unused_imports
+finder:
+  exclude:
+    - "tests"
+  name:
+    - "*.php"
+  not-name:
+    - index.php
+  not-contains:
+    - "config"
