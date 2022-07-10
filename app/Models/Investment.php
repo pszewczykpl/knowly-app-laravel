@@ -37,4 +37,14 @@ class Investment extends Model
         'published_at',
     ];
 
+    public function files()
+    {
+        return $this->morphToMany('App\Models\File', 'fileable')->withTimestamps();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
 }
