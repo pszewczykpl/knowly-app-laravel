@@ -23,6 +23,7 @@ class InvestmentResource extends JsonResource
             'code_toil' => $this->code_toil,
             'code' => $this->code,
             'group' => $this->group_code,
+            'files' => FileResource::collection($this->files)
         ];
     }
 }

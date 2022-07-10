@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\InvestmentCollection;
+use App\Http\Resources\FileResource;
+use App\Http\Resources\InvestmentListResource;
 use App\Http\Resources\InvestmentResource;
 use App\Models\Investment;
 use App\Http\Requests\StoreInvestmentRequest;
 use App\Http\Requests\UpdateInvestmentRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 
 class InvestmentController extends Controller
@@ -16,11 +19,11 @@ class InvestmentController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return InvestmentCollection
+     * @return JsonResource
      */
-    public function index(): InvestmentCollection
+    public function index(): JsonResource
     {
-        return new InvestmentCollection(Investment::all()->where('is_archived', 0));
+        return InvestmentListResource::collection(Investment::where('is_archived', 0)->get());
     }
 
     /**
@@ -29,10 +32,10 @@ class InvestmentController extends Controller
      * @param StoreInvestmentRequest $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(Request $request): Response
     {
         $investment = new Investment($request->all());
-//        Auth('sanctum')->user()->investments()->save($investment);
+        auth()->user()->investments()->save($investment);
         $investment->save();
 
         return response([
@@ -45,13 +48,11 @@ class InvestmentController extends Controller
      * Display the specified resource.
      *
      * @param Investment $investment
-     * @return JsonResponse
+     * @return InvestmentResource
      */
-    public function show(Investment $investment): JsonResponse
+    public function show(Investment $investment): InvestmentResource
     {
-        return response()->json([
-            'data' => $investment
-        ]);
+        return new InvestmentResource($investment);
     }
 
     /**
@@ -61,7 +62,7 @@ class InvestmentController extends Controller
      * @param Investment $investment
      * @return Response
      */
-    public function update(Request $request, Investment $investment)
+    public function update(Request $request, Investment $investment): Response
     {
         $investment->update($request->all());
 
